@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://austin-personal.github.io/austin-blog/sitemap.xml
