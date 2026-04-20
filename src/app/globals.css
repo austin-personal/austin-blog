@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
 @plugin "@tailwindcss/typography";
 
 :root {
@@ -9,7 +10,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "Wanted Sans Variable", "Wanted Sans", var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
