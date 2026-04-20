@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
-import { CATEGORIES, SITE } from "@/lib/constants";
-import VisitorCount from "./VisitorCount";
+import { CATEGORIES } from "@/lib/constants";
 
 interface SidebarProps {
   categories: string[];
@@ -53,12 +52,7 @@ export default function Sidebar({ categories, recentPosts }: SidebarProps) {
             ))}
           </ul>
         </section>
-        <section>
-          <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-            Visitors
-          </h3>
-          <VisitorCount />
-        </section>
+
       </div>
     </aside>
   );
