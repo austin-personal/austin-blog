@@ -1,54 +1,65 @@
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
+"use client";
+
+import { useEffect, useState } from "react";
+import type { TocItem } from "@/lib/headings";
 
 interface TableOfContentsProps {
-  content: string;
+  headings: TocItem[];
 }
 
-function extractHeadings(markdown: string): TocItem[] {
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
-  const items: TocItem[] = [];
-  let match;
+export default function TableOfContents({ headings }: TableOfContentsProps) {
+  const [activeId, setActiveId] = useState<string>("");
 
-  while ((match = headingRegex.exec(markdown)) !== null) {
-    const level = match[1].length;
-    const text = match[2].trim();
-    const id = text
-      .toLowerCase()
-      .replace(/[^a-z0-9가-힣\s-]/g, "")
-      .replace(/\s+/g, "-");
-    items.push({ id, text, level });
-  }
+  useEffect(() => {
+    if (headings.length === 0) return;
 
-  return items;
-}
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          setActiveId(visible[0].target.id);
+        }
+      },
+      { rootMargin: "-80px 0px -60% 0px", threshold: 0 }
+    );
 
-export default function TableOfContents({ content }: TableOfContentsProps) {
-  const headings = extractHeadings(content);
+    const elements = headings
+      .map((h) => document.getElementById(h.id))
+      .filter(Boolean) as HTMLElement[];
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [headings]);
 
   if (headings.length === 0) return null;
 
   return (
-    <nav className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-900">Table of Contents</h2>
-      <ul className="space-y-1.5 text-sm">
-        {headings.map((heading) => (
-          <li
-            key={heading.id}
-            style={{ paddingLeft: `${(heading.level - 2) * 16}px` }}
-          >
-            <a
-              href={`#${heading.id}`}
-              className="text-gray-600 hover:text-gray-900 transition-colors"
+    <nav className="hidden xl:block w-48 shrink-0">
+      <div className="sticky top-24">
+        <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+          Outline
+        </h3>
+        <ul className="mt-3 space-y-1.5 text-sm border-l border-gray-200">
+          {headings.map((heading) => (
+            <li
+              key={heading.id}
+              style={{ paddingLeft: `${(heading.level - 2) * 12 + 12}px` }}
             >
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
+              <a
+                href={`#${heading.id}`}
+                className={`block py-0.5 transition-colors border-l-2 -ml-px pl-3 ${
+                  activeId === heading.id
+                    ? "border-gray-900 text-gray-900 font-medium"
+                    : "border-transparent text-gray-400 hover:text-gray-700"
+                }`}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 }

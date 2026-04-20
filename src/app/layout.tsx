@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
+import { getAllPosts, getCategories } from "@/lib/posts";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
@@ -55,9 +57,15 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-white font-sans text-gray-900">
         <Header />
-        <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-          {children}
-        </main>
+        <div className="mx-auto flex w-full max-w-7xl flex-1 gap-10 px-6 py-10">
+          <main className="min-w-0 flex-1">
+            {children}
+          </main>
+          <Sidebar
+            categories={getCategories()}
+            recentPosts={getAllPosts().slice(0, 5)}
+          />
+        </div>
         <Footer />
       </body>
     </html>

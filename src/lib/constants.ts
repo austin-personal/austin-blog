@@ -1,5 +1,5 @@
 export const SITE = {
-  name: "Austin Playground",
+  name: "austin-blog",
   description: "Development, technology, and everything in between.",
   url: "https://austin-personal.github.io/austin-blog",
   author: {
