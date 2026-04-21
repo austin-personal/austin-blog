@@ -52,6 +52,15 @@ published: true
 1. ECS Agent
 
 - 기본적으로 ECS는 Fargate이든 아니든 EC2에서 동작한다. ECS Agent는 EC2 위에 도커 데몬에게 어떤 컨테이너를 어떻게 실행해라라고 명령하는 EC2에서 상주하는 매니저이다.
+- ECS agent는 EC2에 실행되는 데몬 프로세스이다. 이 데몬 프로세스가 ECS control plane에 long polling을 하며 할 일이 있는지 지속적으로 체크한다.
+
+  > Daemon process란? 원래 부모 프로세스가 종료되어 PID 1(init/systemd)에 입양되어, 다른 서비스 의존 없이 백그라운드에서 계속 실행되는 프로세스
+  > 왜 폴링인가? 푸시가 아니라?
+  >
+  > 1. 푸시하려면 ECS 컨트롤 플레인이 여러 개의 ECS agent(EC2)에 접근 설정을 해야함 subnet, ec2의 IP, ec2의 인바운드 포트 등등
+  > 2. 푸시하려면 ECS가 각 EC2 ECS agent(ec2)와 연결을 관리해야함
+  > 3. 폴링하면 메모리 대역폭을 점유는 하지만 위와 같은 ECS control plane에 부하가 없음
+
 - ECS 에서 서비스 생성 -> ECS agent가 EC2에서 docker run ... 실행 -> 도커 데몬 해당 명령어 실행
 - 헬스체크도 이 친구가 함 -> 헬스체크 실패시 서비스한테 "UNHEALTHY" 해요라고 전달 -> 서비스는 재시작 로직에 따라 재시작 결정함 -> ECS agent가 EC2에서 도커 명령어 실행
 
